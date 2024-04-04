@@ -3,16 +3,26 @@ import os
 import glob
 import pandas as pd
 
+def reboot(filename):
+    if "after" in filename:
+        return "After"
+    elif "before" in filename:
+        return "Before"
+    else:
+        raise KeyError
+
 def merge_csv_files(input_folder, output_file):
     # List all CSV files in the input folder
     csv_files = glob.glob(os.path.join(input_folder, '*.csv'))
-    #print(csv_files)
+    
     # Initialize an empty DataFrame to store the merged data
     all_data = []
     
     # Read each CSV file and append its data to the merged DataFrame
     for csv_file in csv_files:
+        filename = csv_file.split('/')[-1].split('_')
         data = pd.read_csv(csv_file)
+        data['Reboot'] = reboot(filename)
         all_data.append(data)
     
     # Concatenate all DataFrames in the list into one DataFrame
